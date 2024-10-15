@@ -1,4 +1,4 @@
-package com.bezkoder.spring.datajpa.model;
+package com.csse.hospital.model;
 
 import jakarta.persistence.*;
 
