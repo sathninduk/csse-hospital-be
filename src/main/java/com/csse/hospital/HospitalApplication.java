@@ -1,13 +1,13 @@
-package com.bezkoder.spring.datajpa;
+package com.csse.hospital;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootDataJpaApplication {
+public class HospitalApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootDataJpaApplication.class, args);
+		SpringApplication.run(HospitalApplication.class, args);
 	}
 
 }

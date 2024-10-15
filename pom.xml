@@ -9,7 +9,7 @@
 		<version>3.1.5</version>
 		<relativePath />
 	</parent>
-	<groupId>com.bezkoder</groupId>
+	<groupId>com.csse.hospital</groupId>
 	<artifactId>spring-boot-data-jpa</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot-data-jpa</name>

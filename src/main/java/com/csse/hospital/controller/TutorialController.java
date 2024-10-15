@@ -1,4 +1,4 @@
-package com.bezkoder.spring.datajpa.controller;
+package com.csse.hospital.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bezkoder.spring.datajpa.model.Tutorial;
-import com.bezkoder.spring.datajpa.repository.TutorialRepository;
+import com.csse.hospital.model.Tutorial;
+import com.csse.hospital.repository.TutorialRepository;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
