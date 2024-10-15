@@ -1,10 +1,10 @@
-package com.bezkoder.spring.datajpa;
+package com.bezkoder.spring.jpa.postgresql;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringBootDataJpaApplicationTests {
+class SpringBootJpaPostgresqlApplicationTests {
 
 	@Test
 	void contextLoads() {

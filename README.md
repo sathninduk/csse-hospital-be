@@ -1,63 +1,81 @@
-# CSSE BE - SE-S1-WE-02
-## Hospital Management System - Backend
+# Spring Boot JPA PostgreSQL example with Maven
 
-This is the backend service for a Hospital Management System (HMS) built using Spring Boot. It provides essential functionalities such as managing patient payments, generating patient cards, scheduling appointments, and managing medical reports. The system aims to streamline hospital operations and improve patient care through efficient data management and process automation.
+For instruction, please visit:
+> [Spring Boot PostgreSQL with Maven example using Spring Data JPA](https://www.bezkoder.com/spring-boot-postgresql-example/)
 
-## Table of Contents
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running the Application](#running-the-application)
-- [Endpoints](#endpoints)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
+Front-end that works well with this Back-end
+> [Angular 8](https://www.bezkoder.com/angular-crud-app/) / [Angular 10](https://www.bezkoder.com/angular-10-crud-app/) / [Angular 11](https://www.bezkoder.com/angular-11-crud-app/) / [Angular 12](https://www.bezkoder.com/angular-12-crud-app/) / [Angular 13](https://www.bezkoder.com/angular-13-crud-example/) / [Angular 14](https://www.bezkoder.com/angular-14-crud-example/) / [Angular 15](https://www.bezkoder.com/angular-15-crud-example/) / [Angular 16](https://www.bezkoder.com/angular-16-crud-example/) / [Angular 17 Client](https://www.bezkoder.com/angular-17-crud-example/)
 
-## Features
-This backend service provides the following core features:
+> [Vue 2](https://www.bezkoder.com/vue-js-crud-app/) / [Vue 3](https://www.bezkoder.com/vue-3-crud/) / [Vuetify Client](https://www.bezkoder.com/vuetify-data-table-example/)
 
-- **Patient Payment Management**: Handles payment records, tracks patient bills, and processes payments.
-- **Patient Card Generation**: Generates and manages unique patient ID cards for identification and record-keeping.
-- **Appointment Scheduling**: Allows patients to schedule and manage appointments with doctors.
-- **Medical Report Management**: Stores and organizes patient medical records for easy access and retrieval by medical staff.
+> [React](https://www.bezkoder.com/react-crud-web-api/) / [React Redux Client](https://www.bezkoder.com/react-redux-crud-example/)
 
-## Tech Stack
-- **Java (JDK 11 or later)**
-- **Spring Boot** - Core framework for building RESTful web services
-- **Spring Data JPA** - Data management with support for ORM
-- **MySQL** - Database for storing data (or any relational database of choice)
-- **Swagger** - API documentation
-- **Maven** - Dependency management
+More practice:
+> [Spring Boot Validate Request Body](https://www.bezkoder.com/spring-boot-validate-request-body/)
 
-## Getting Started
+> [Spring Boot File upload example with Multipart File](https://www.bezkoder.com/spring-boot-file-upload/)
 
-### Prerequisites
-- **Java JDK 11 or later**: [Download JDK](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
-- **Maven**: [Download Maven](https://maven.apache.org/download.cgi)
-- **MySQL**: Ensure MySQL server is installed and running
+> [Spring Boot Pagination & Filter example | Spring JPA, Pageable](https://www.bezkoder.com/spring-boot-pagination-filter-jpa-pageable/)
 
-### Installation
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/sathninduk/csse-be.git
-    cd csse-be
-    ```
+> [Spring Data JPA Sort/Order by multiple Columns | Spring Boot](https://www.bezkoder.com/spring-data-sort-multiple-columns/)
 
-2. Configure the Database:
-    Open the `src/main/resources/application.properties` file and update the database configurations:
-    ```properties
-    spring.datasource.url=jdbc:mysql://localhost:3306/hospital_management
-    spring.jpa.hibernate.ddl-auto=update
-    ```
+> [Spring Boot Repository Unit Test with @DataJpaTest](https://www.bezkoder.com/spring-boot-unit-test-jpa-repo-datajpatest/)
 
-3. Install dependencies:
-    ```bash
-    mvn clean install
-    ```
+> [Spring Boot Rest Controller Unit Test with @WebMvcTest](https://www.bezkoder.com/spring-boot-webmvctest/)
 
-### Running the Application
-To start the server, run the following command in the project root:
-```bash
+> Cache the result: [Spring Boot Redis Cache example](https://www.bezkoder.com/spring-boot-redis-cache-example/)
+
+> Documentation: [Spring Boot with Swagger 3 example](https://www.bezkoder.com/spring-boot-swagger-3/)
+
+> Reactive Rest API: [Spring Boot WebFlux example](https://www.bezkoder.com/spring-boot-webflux-rest-api/)
+
+> [Deploy Spring Boot App on AWS – Elastic Beanstalk](https://www.bezkoder.com/deploy-spring-boot-aws-eb/)
+
+Associations:
+> [Spring Boot One To One example with Spring JPA, Hibernate](https://www.bezkoder.com/jpa-one-to-one/)
+
+> [Spring Boot One To Many example with Spring JPA, Hibernate](https://www.bezkoder.com/jpa-one-to-many/)
+
+> [Spring Boot Many To Many example with Spring JPA, Hibernate](https://www.bezkoder.com/jpa-many-to-many/)
+
+Security:
+> [Spring Boot, Spring Security, PostgreSQL: JWT Authentication & Authorization example](https://www.bezkoder.com/spring-boot-security-postgresql-jwt-authentication/)
+
+Exception Handling:
+> [Spring Boot @ControllerAdvice & @ExceptionHandler example](https://www.bezkoder.com/spring-boot-controlleradvice-exceptionhandler/)
+
+> [@RestControllerAdvice example in Spring Boot](https://www.bezkoder.com/spring-boot-restcontrolleradvice/)
+
+Fullstack:
+> [Vue.js + Spring Boot + MySQL/PostgreSQL example](https://www.bezkoder.com/spring-boot-vue-js-crud-example/)
+
+> [Angular 10 + Spring Boot + PostgreSQL example](https://www.bezkoder.com/angular-10-spring-boot-postgresql/)
+
+> [Angular 11 + Spring Boot + PostgreSQL example](https://www.bezkoder.com/angular-11-spring-boot-postgresql/)
+
+> [Angular 12 + Spring Boot + PostgreSQL example](https://www.bezkoder.com/angular-12-spring-boot-postgresql/)
+
+> [Angular 13 + Spring Boot + PostgreSQL example](https://www.bezkoder.com/spring-boot-angular-13-postgresql/)
+
+> [Angular 14 + Spring Boot + PostgreSQL example](https://www.bezkoder.com/spring-boot-angular-14-postgresql/)
+
+> [Angular 15 + Spring Boot + PostgreSQL example](https://www.bezkoder.com/spring-boot-angular-15-postgresql/)
+
+> [Angular 16 + Spring Boot + PostgreSQL example](https://www.bezkoder.com/spring-boot-angular-16-postgresql/)
+
+> [Angular 17 + Spring Boot + PostgreSQL example](https://www.bezkoder.com/spring-boot-angular-17-postgresql/)
+
+> [React + Spring Boot + PostgreSQL example](https://www.bezkoder.com/spring-boot-react-postgresql/)
+
+Run both Back-end & Front-end in one place:
+> [Integrate Angular with Spring Boot Rest API](https://www.bezkoder.com/integrate-angular-spring-boot/)
+
+> [Integrate React.js with Spring Boot Rest API](https://www.bezkoder.com/integrate-reactjs-spring-boot/)
+
+> [Integrate Vue.js with Spring Boot Rest API](https://www.bezkoder.com/integrate-vue-spring-boot/)
+
+## Run Spring Boot application
+```
 mvn spring-boot:run
+```
+
