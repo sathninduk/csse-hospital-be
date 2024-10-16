@@ -1,13 +1,11 @@
-package com.bezkoder.spring.jpa.postgresql;
+package com.csse.hospital;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBootJpaPostgresqlApplication {
-
+public class HospitalApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootJpaPostgresqlApplication.class, args);
+		SpringApplication.run(HospitalApplication.class, args);
 	}
-
 }
