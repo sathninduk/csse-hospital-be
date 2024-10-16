@@ -1,4 +1,4 @@
-package com.bezkoder.spring.jpa.postgresql.model;
+package com.csse.hospital.model;
 
 import jakarta.persistence.*;
 
