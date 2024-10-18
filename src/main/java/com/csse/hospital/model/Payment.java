@@ -5,13 +5,18 @@ import com.csse.hospital.model.paymentMethod.PaymentMethod;
 import com.csse.hospital.model.user.Patient;
 import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+
 @Entity
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private double amount;
-    private String paymentDate;
+
+    @Column(name = "payment_date", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp paymentDate;
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
@@ -54,11 +59,11 @@ public class Payment {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getPaymentDate() {
+    public Timestamp getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(String paymentDate) {
+    public void setPaymentDate(Timestamp paymentDate) {
         this.paymentDate = paymentDate;
     }
 }
