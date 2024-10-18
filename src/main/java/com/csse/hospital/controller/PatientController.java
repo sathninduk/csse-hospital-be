@@ -3,6 +3,7 @@ package com.csse.hospital.controller;
 
 import com.csse.hospital.model.user.Patient;
 import com.csse.hospital.repository.PatientRepository;
+import com.csse.hospital.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,10 @@ import java.util.Optional;
 public class PatientController {
 
     @Autowired
-    PatientRepository patientRepository;
+    private PatientService patientService;
+
+    @Autowired
+    private PatientRepository patientRepository;
 
     @GetMapping
     public ResponseEntity<List<Patient>> getAllPatients() {
@@ -33,7 +37,7 @@ public class PatientController {
 
     @PostMapping
     public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
-        Patient savedPatient = patientRepository.save(patient);
+        Patient savedPatient = patientService.createPatient(patient);
         return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
     }
 
