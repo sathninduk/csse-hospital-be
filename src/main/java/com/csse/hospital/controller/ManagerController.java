@@ -42,8 +42,8 @@ public class ManagerController {
         Optional<Manager> existingManager = managerRepository.findById(id);
         if (existingManager.isPresent()) {
             Manager updatedManager = existingManager.get();
-            updatedManager.setName(manager.getName());
-            updatedManager.setEmail(manager.getEmail());
+            updatedManager.setFirst_name(manager.getFirst_name());
+            updatedManager.setUsername(manager.getUsername());
             return new ResponseEntity<>(managerRepository.save(updatedManager), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

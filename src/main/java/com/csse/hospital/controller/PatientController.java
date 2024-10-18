@@ -46,8 +46,8 @@ public class PatientController {
         Optional<Patient> existingPatient = patientRepository.findById(id);
         if (existingPatient.isPresent()) {
             Patient updatedPatient = existingPatient.get();
-            updatedPatient.setName(patient.getName());
-            updatedPatient.setEmail(patient.getEmail());
+            updatedPatient.setFirst_name(patient.getFirst_name());
+            updatedPatient.setUsername(patient.getUsername());
             return new ResponseEntity<>(patientRepository.save(updatedPatient), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
