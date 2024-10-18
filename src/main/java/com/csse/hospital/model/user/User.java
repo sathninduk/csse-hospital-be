@@ -21,6 +21,10 @@ public abstract class User {
     )
     private Set<Role> roles;
 
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;
