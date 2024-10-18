@@ -4,6 +4,7 @@ import com.csse.hospital.model.user.Doctor;
 import com.csse.hospital.model.user.Patient;
 import jakarta.persistence.*;
 
+@Entity
 public class MedicalReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
