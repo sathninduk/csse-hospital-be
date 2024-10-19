@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT COUNT(p) FROM Payment p WHERE p.paymentDate BETWEEN :start AND :end AND " +
             "(:key = 'id' AND p.id = :value OR " +
-            ":key = 'user_id' AND p.patient.id LIKE %:value% OR " +
-            ":key = 'client_id' AND p.paymentMethod.id LIKE %:value%)")
+            ":key = 'user_id' AND p.patient.id = :value OR " +
+            ":key = 'client_id' AND p.paymentMethod.id = :value)")
     long countByKeyAndValueAndDateRange(@Param("key") String key,
                                         @Param("value") String value,
                                         @Param("start") String start,
@@ -20,8 +20,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     @Query("SELECT COUNT(p) FROM Payment p WHERE " +
             "(:key = 'id' AND p.id = :value OR " +
-            ":key = 'user_id' AND p.patient.id LIKE %:value% OR " +
-            ":key = 'client_id' AND p.paymentMethod.id LIKE %:value%)")
+            ":key = 'user_id' AND p.patient.id = :value OR " +
+            ":key = 'client_id' AND p.paymentMethod.id = :value)")
     long countByKeyAndValue(@Param("key") String key,
                             @Param("value") String value);
 }
