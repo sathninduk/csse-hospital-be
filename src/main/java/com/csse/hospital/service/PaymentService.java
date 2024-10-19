@@ -14,7 +14,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -38,13 +40,55 @@ public class PaymentService {
     }
 
     public Payment updatePayment(Long id, Payment payment) {
-        Optional<Payment> existingPayment = paymentRepository.findById(id);
-        if (existingPayment.isPresent()) {
-            payment.setId(id);
-            return paymentRepository.save(payment);
+        Optional<Payment> existingPaymentOpt = paymentRepository.findById(id);
+        if (existingPaymentOpt.isPresent()) {
+            Payment existingPayment = existingPaymentOpt.get();
+
+            if (payment.getAmount() != 0) {
+                existingPayment.setAmount(payment.getAmount());
+            }
+            if (payment.getPatient() != null) {
+                existingPayment.setPatient(payment.getPatient());
+            }
+            if (payment.getPaymentMethod() != null) {
+                existingPayment.setPaymentMethod(payment.getPaymentMethod());
+            }
+            if (payment.getStatus() != 0) {
+                existingPayment.setStatus(payment.getStatus());
+            }
+
+            return paymentRepository.save(existingPayment);
         } else {
             return null;
         }
+    }
+
+    public List<Payment> updatePaymentsBulk(Map<Long, Payment> paymentsToUpdate) {
+        List<Payment> updatedPayments = new ArrayList<>();
+        for (Map.Entry<Long, Payment> entry : paymentsToUpdate.entrySet()) {
+            Long id = entry.getKey();
+            Payment payment = entry.getValue();
+            Optional<Payment> existingPaymentOpt = paymentRepository.findById(id);
+            if (existingPaymentOpt.isPresent()) {
+                Payment existingPayment = existingPaymentOpt.get();
+
+                if (payment.getAmount() != 0) {
+                    existingPayment.setAmount(payment.getAmount());
+                }
+                if (payment.getPatient() != null) {
+                    existingPayment.setPatient(payment.getPatient());
+                }
+                if (payment.getPaymentMethod() != null) {
+                    existingPayment.setPaymentMethod(payment.getPaymentMethod());
+                }
+                if (payment.getStatus() != 0) {
+                    existingPayment.setStatus(payment.getStatus());
+                }
+
+                updatedPayments.add(paymentRepository.save(existingPayment));
+            }
+        }
+        return updatedPayments;
     }
 
     public void deletePayment(Long id) {

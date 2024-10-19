@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -44,6 +45,12 @@ public class PaymentController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/bulk")
+    public ResponseEntity<List<Payment>> updatePaymentsBulk(@RequestBody Map<Long, Payment> paymentsToUpdate) {
+        List<Payment> updatedPayments = paymentService.updatePaymentsBulk(paymentsToUpdate);
+        return new ResponseEntity<>(updatedPayments, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
