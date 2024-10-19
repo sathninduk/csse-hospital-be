@@ -14,6 +14,9 @@ public class Appointment {
     private Date date;
     private Date time;
 
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int status;
+
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
@@ -29,6 +32,14 @@ public class Appointment {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public Date getDate() {
