@@ -19,7 +19,11 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @GetMapping
-    public ResponseEntity<List<Payment>> getAllPayments(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<Payment>> getAllPayments(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) String key, @RequestParam(required = false) String value) {
+        if (key != null && value != null && !value.isEmpty()) {
+            List<Payment> payments = paymentService.searchPayments(key, value, page, size, null, null);
+            return new ResponseEntity<>(payments, HttpStatus.OK);
+        }
         List<Payment> payments = paymentService.getAllPayments(page, size);
         return new ResponseEntity<>(payments, HttpStatus.OK);
     }
@@ -28,7 +32,7 @@ public class PaymentController {
     public ResponseEntity<Payment> getPaymentById(@PathVariable Long id) {
         Optional<Payment> payment = paymentService.getPaymentById(id);
         return payment.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                      .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
@@ -74,8 +78,8 @@ public class PaymentController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Payment>> searchPayments(@RequestParam String key, @RequestParam String value, @RequestParam int page, @RequestParam int size) {
-        List<Payment> payments = paymentService.searchPayments(key, value, page, size);
+    public ResponseEntity<List<Payment>> searchPayments(@RequestParam(required = false) String key, @RequestParam(required = false) String value, @RequestParam int page, @RequestParam int size, @RequestParam(required = false) String start, @RequestParam(required = false) String end) {
+        List<Payment> payments = paymentService.searchPayments(key, value, page, size, start, end);
         return new ResponseEntity<>(payments, HttpStatus.OK);
     }
 

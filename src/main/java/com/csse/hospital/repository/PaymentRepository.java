@@ -19,6 +19,16 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT p FROM Payment p WHERE p.paymentMethod.id = :id ORDER BY p.id")
     List<Payment> findByPaymentMethodId(@Param("id") Long id, Pageable pageable);
 
+    @Query("SELECT p FROM Payment p WHERE status = :value ORDER BY p.id")
+    List<Payment> findByStatus(@Param("value") int value,
+                                  Pageable pageable);
+
+    // findByStatusAndDateRange
+    @Query("SELECT p FROM Payment p WHERE p.paymentDate BETWEEN :start AND :end ORDER BY p.id")
+    List<Payment> findByDateRange(@Param("start") Timestamp start,
+                                           @Param("end") Timestamp end,
+                                           Pageable pageable);
+
     @Query("SELECT COUNT(p) FROM Payment p WHERE p.paymentDate BETWEEN :start AND :end AND " +
             "(:key = 'id' AND p.id = :value OR " +
             ":key = 'patient_id' AND p.patient.id = :value OR " +
@@ -35,7 +45,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Query("SELECT COUNT(p) FROM Payment p WHERE " +
             "(:key = 'id' AND p.id = :value OR " +
             ":key = 'patient_id' AND p.patient.id = :value OR " +
+            "status = :value OR " +
             ":key = 'payment_method_id' AND p.paymentMethod.id = :value)")
     long countByKeyAndValue(@Param("key") String key,
                             @Param("value") String value);
+
+    @Query("SELECT COUNT(p) FROM Payment p WHERE status = :value")
+    long countByStatus(@Param("value") int value);
 }
