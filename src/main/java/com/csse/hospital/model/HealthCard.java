@@ -1,13 +1,14 @@
 // HealthCard.java
 package com.csse.hospital.model;
-
 import com.csse.hospital.model.user.Patient;
 import jakarta.persistence.*;
-
 import java.sql.Timestamp;
 
+// HealthCard Entity
 @Entity
 public class HealthCard {
+
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,6 +20,7 @@ public class HealthCard {
     @Column(name = "request_date", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp requestDate;
 
+    // Relationships
     @OneToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;

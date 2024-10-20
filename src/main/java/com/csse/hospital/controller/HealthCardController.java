@@ -26,6 +26,7 @@ public class HealthCardController {
     @Autowired
     private HealthCardService healthCardService;
 
+    // Get all health cards with optional search parameters
     @GetMapping
     public ResponseEntity<List<HealthCard>> getAllHealthCards(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) String key, @RequestParam(required = false) String value) {
         logger.info("Fetching all health cards with page: {}, size: {}, key: {}, value: {}", page, size, key, value);
@@ -37,6 +38,7 @@ public class HealthCardController {
         return new ResponseEntity<>(healthCards, HttpStatus.OK);
     }
 
+    // Get health card by ID
     @GetMapping("/{id}")
     public ResponseEntity<HealthCard> getHealthCardById(@PathVariable Long id) {
         logger.info("Fetching health card with id: {}", id);
@@ -45,6 +47,7 @@ public class HealthCardController {
                          .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // Create a new health card
     @PostMapping
     public ResponseEntity<HealthCard> createHealthCard(@RequestBody HealthCard healthCard) {
         logger.info("Creating new health card: {}", healthCard);
@@ -52,6 +55,7 @@ public class HealthCardController {
         return new ResponseEntity<>(createdHealthCard, HttpStatus.CREATED);
     }
 
+    // Update an existing health card
     @PutMapping("/{id}")
     public ResponseEntity<HealthCard> updateHealthCard(@PathVariable Long id, @RequestBody HealthCard healthCard) {
         logger.info("Updating health card with id: {}", id);
@@ -63,6 +67,7 @@ public class HealthCardController {
         }
     }
 
+    // Update health cards in bulk
     @PutMapping("/bulk")
     public ResponseEntity<List<HealthCard>> updateHealthCardsBulk(@RequestBody Map<Long, HealthCard> healthCardsToUpdate) {
         logger.info("Updating health cards in bulk: {}", healthCardsToUpdate.keySet());
@@ -70,6 +75,7 @@ public class HealthCardController {
         return new ResponseEntity<>(updatedHealthCards, HttpStatus.OK);
     }
 
+    // Delete a health card by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteHealthCard(@PathVariable Long id) {
         logger.info("Deleting health card with id: {}", id);
@@ -82,6 +88,7 @@ public class HealthCardController {
         }
     }
 
+    // Delete health cards in bulk
     @DeleteMapping("/bulk")
     public ResponseEntity<HttpStatus> deleteHealthCardsBulk(@RequestBody List<Long> ids) {
         logger.info("Deleting health cards in bulk: {}", ids);
@@ -94,6 +101,7 @@ public class HealthCardController {
         }
     }
 
+    // Search health cards with various filters
     @GetMapping("/search")
     public ResponseEntity<List<HealthCard>> searchHealthCards(@RequestParam(required = false) String key, @RequestParam(required = false) String value, @RequestParam int page, @RequestParam int size, @RequestParam(required = false) String start, @RequestParam(required = false) String end) {
         logger.info("Searching health cards with key: {}, value: {}, page: {}, size: {}, start: {}, end: {}", key, value, page, size, start, end);
@@ -101,6 +109,7 @@ public class HealthCardController {
         return new ResponseEntity<>(healthCards, HttpStatus.OK);
     }
 
+    // Get the count of health cards with various filters
     @GetMapping("/count")
     public ResponseEntity<Long> getHealthCardsCount(@RequestParam(required = false) String key,
                                                     @RequestParam(required = false) String value,

@@ -26,6 +26,7 @@ public class AppointmentsController {
     @Autowired
     private AppointmentService appointmentService;
 
+    // Get all appointments with optional search parameters
     @GetMapping
     public ResponseEntity<List<Appointment>> getAllAppointments(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) String key, @RequestParam(required = false) String value) {
         logger.info("Fetching all appointments with page: {}, size: {}, key: {}, value: {}", page, size, key, value);
@@ -37,6 +38,7 @@ public class AppointmentsController {
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
+    // Get appointment by ID
     @GetMapping("/{id}")
     public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
         logger.info("Fetching appointment with id: {}", id);
@@ -45,16 +47,18 @@ public class AppointmentsController {
                           .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // Create a new appointment
     @PostMapping
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment) {
         logger.info("Creating new appointment: {}", appointment);
-        // convert "appointmentDate" to timestamp
+        // Convert "appointmentDate" to timestamp
         appointment.setAppointmentTime(appointment.getAppointmentTime());
 
         Appointment savedAppointment = appointmentService.createAppointment(appointment);
         return new ResponseEntity<>(savedAppointment, HttpStatus.CREATED);
     }
 
+    // Update an existing appointment
     @PutMapping("/{id}")
     public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody Appointment appointment) {
         logger.info("Updating appointment with id: {}", id);
@@ -66,6 +70,7 @@ public class AppointmentsController {
         }
     }
 
+    // Update appointments in bulk
     @PutMapping("/bulk")
     public ResponseEntity<List<Appointment>> updateAppointmentsBulk(@RequestBody Map<Long, Appointment> appointmentsToUpdate) {
         logger.info("Updating appointments in bulk: {}", appointmentsToUpdate.keySet());
@@ -73,6 +78,7 @@ public class AppointmentsController {
         return new ResponseEntity<>(updatedAppointments, HttpStatus.OK);
     }
 
+    // Delete an appointment by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteAppointment(@PathVariable Long id) {
         logger.info("Deleting appointment with id: {}", id);
@@ -85,6 +91,7 @@ public class AppointmentsController {
         }
     }
 
+    // Delete appointments in bulk
     @DeleteMapping("/bulk")
     public ResponseEntity<HttpStatus> deleteAppointmentsBulk(@RequestBody List<Long> ids) {
         logger.info("Deleting appointments in bulk: {}", ids);
@@ -97,6 +104,7 @@ public class AppointmentsController {
         }
     }
 
+    // Search appointments with various filters
     @GetMapping("/search")
     public ResponseEntity<List<Appointment>> searchAppointments(@RequestParam(required = false) String key, @RequestParam(required = false) String value, @RequestParam int page, @RequestParam int size, @RequestParam(required = false) String start, @RequestParam(required = false) String end) {
         logger.info("Searching appointments with key: {}, value: {}, page: {}, size: {}, start: {}, end: {}", key, value, page, size, start, end);
@@ -104,6 +112,7 @@ public class AppointmentsController {
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
+    // Get the count of appointments with various filters
     @GetMapping("/count")
     public ResponseEntity<Long> getAppointmentsCount(@RequestParam(required = false) String key,
                                                      @RequestParam(required = false) String value,

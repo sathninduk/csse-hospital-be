@@ -1,14 +1,15 @@
 // Payment.java
 package com.csse.hospital.model;
-
 import com.csse.hospital.model.paymentMethod.PaymentMethod;
 import com.csse.hospital.model.user.Patient;
 import jakarta.persistence.*;
-
 import java.sql.Timestamp;
 
+// Payment Entity
 @Entity
 public class Payment {
+
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,6 +19,7 @@ public class Payment {
     @Column(name = "payment_date", insertable = false, updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp paymentDate;
 
+    // Relationships
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
