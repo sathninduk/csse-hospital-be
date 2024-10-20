@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -19,8 +20,12 @@ public class AppointmentsController {
     private AppointmentService appointmentService;
 
     @GetMapping
-    public ResponseEntity<List<Appointment>> getAllAppointments() {
-        List<Appointment> appointments = appointmentService.getAllAppointments();
+    public ResponseEntity<List<Appointment>> getAllAppointments(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) String key, @RequestParam(required = false) String value) {
+        if (key != null && value != null && !value.isEmpty()) {
+            List<Appointment> appointments = appointmentService.searchAppointments(key, value, page, size, null, null);
+            return new ResponseEntity<>(appointments, HttpStatus.OK);
+        }
+        List<Appointment> appointments = appointmentService.getAllAppointments(page, size);
         return new ResponseEntity<>(appointments, HttpStatus.OK);
     }
 
@@ -33,23 +38,27 @@ public class AppointmentsController {
 
     @PostMapping
     public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment) {
+        // convert "appointmentDate" to timestamp
+        appointment.setAppointmentTime(appointment.getAppointmentTime());
+
         Appointment savedAppointment = appointmentService.createAppointment(appointment);
         return new ResponseEntity<>(savedAppointment, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody Appointment appointment) {
-        Optional<Appointment> existingAppointment = appointmentService.getAppointmentById(id);
-        if (existingAppointment.isPresent()) {
-            Appointment updatedAppointment = existingAppointment.get();
-            updatedAppointment.setDate(appointment.getDate());
-            updatedAppointment.setTime(appointment.getTime());
-            updatedAppointment.setDoctor(appointment.getDoctor());
-            updatedAppointment.setPatient(appointment.getPatient());
-            return new ResponseEntity<>(appointmentService.updateAppointment(updatedAppointment), HttpStatus.OK);
+        Appointment updatedAppointment = appointmentService.updateAppointment(id, appointment);
+        if (updatedAppointment != null) {
+            return new ResponseEntity<>(updatedAppointment, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/bulk")
+    public ResponseEntity<List<Appointment>> updateAppointmentsBulk(@RequestBody Map<Long, Appointment> appointmentsToUpdate) {
+        List<Appointment> updatedAppointments = appointmentService.updateAppointmentsBulk(appointmentsToUpdate);
+        return new ResponseEntity<>(updatedAppointments, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -60,5 +69,30 @@ public class AppointmentsController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @DeleteMapping("/bulk")
+    public ResponseEntity<HttpStatus> deleteAppointmentsBulk(@RequestBody List<Long> ids) {
+        try {
+            appointmentService.deleteAppointmentsBulk(ids);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Appointment>> searchAppointments(@RequestParam(required = false) String key, @RequestParam(required = false) String value, @RequestParam int page, @RequestParam int size, @RequestParam(required = false) String start, @RequestParam(required = false) String end) {
+        List<Appointment> appointments = appointmentService.searchAppointments(key, value, page, size, start, end);
+        return new ResponseEntity<>(appointments, HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getAppointmentsCount(@RequestParam(required = false) String key,
+                                                     @RequestParam(required = false) String value,
+                                                     @RequestParam(required = false) String start,
+                                                     @RequestParam(required = false) String end) {
+        long count = appointmentService.getAppointmentsCount(key, value, start, end);
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }

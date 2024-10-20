@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -19,8 +20,12 @@ public class HealthCardController {
     private HealthCardService healthCardService;
 
     @GetMapping
-    public ResponseEntity<List<HealthCard>> getAllHealthCards() {
-        List<HealthCard> healthCards = healthCardService.getAllHealthCards();
+    public ResponseEntity<List<HealthCard>> getAllHealthCards(@RequestParam int page, @RequestParam int size, @RequestParam(required = false) String key, @RequestParam(required = false) String value) {
+        if (key != null && value != null && !value.isEmpty()) {
+            List<HealthCard> healthCards = healthCardService.searchHealthCards(key, value, page, size, null, null);
+            return new ResponseEntity<>(healthCards, HttpStatus.OK);
+        }
+        List<HealthCard> healthCards = healthCardService.getAllHealthCards(page, size);
         return new ResponseEntity<>(healthCards, HttpStatus.OK);
     }
 
@@ -33,21 +38,24 @@ public class HealthCardController {
 
     @PostMapping
     public ResponseEntity<HealthCard> createHealthCard(@RequestBody HealthCard healthCard) {
-        HealthCard savedHealthCard = healthCardService.createHealthCard(healthCard);
-        return new ResponseEntity<>(savedHealthCard, HttpStatus.CREATED);
+        HealthCard createdHealthCard = healthCardService.createHealthCard(healthCard);
+        return new ResponseEntity<>(createdHealthCard, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<HealthCard> updateHealthCard(@PathVariable Long id, @RequestBody HealthCard healthCard) {
-        Optional<HealthCard> existingHealthCard = healthCardService.getHealthCardById(id);
-        if (existingHealthCard.isPresent()) {
-            HealthCard updatedHealthCard = existingHealthCard.get();
-            updatedHealthCard.setCardNumber(healthCard.getCardNumber());
-            updatedHealthCard.setPatient(healthCard.getPatient());
-            return new ResponseEntity<>(healthCardService.updateHealthCard(updatedHealthCard), HttpStatus.OK);
+        HealthCard updatedHealthCard = healthCardService.updateHealthCard(id, healthCard);
+        if (updatedHealthCard != null) {
+            return new ResponseEntity<>(updatedHealthCard, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/bulk")
+    public ResponseEntity<List<HealthCard>> updateHealthCardsBulk(@RequestBody Map<Long, HealthCard> healthCardsToUpdate) {
+        List<HealthCard> updatedHealthCards = healthCardService.updateHealthCardsBulk(healthCardsToUpdate);
+        return new ResponseEntity<>(updatedHealthCards, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -58,5 +66,30 @@ public class HealthCardController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @DeleteMapping("/bulk")
+    public ResponseEntity<HttpStatus> deleteHealthCardsBulk(@RequestBody List<Long> ids) {
+        try {
+            healthCardService.deleteHealthCardsBulk(ids);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<HealthCard>> searchHealthCards(@RequestParam(required = false) String key, @RequestParam(required = false) String value, @RequestParam int page, @RequestParam int size, @RequestParam(required = false) String start, @RequestParam(required = false) String end) {
+        List<HealthCard> healthCards = healthCardService.searchHealthCards(key, value, page, size, start, end);
+        return new ResponseEntity<>(healthCards, HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getHealthCardsCount(@RequestParam(required = false) String key,
+                                                    @RequestParam(required = false) String value,
+                                                    @RequestParam(required = false) String start,
+                                                    @RequestParam(required = false) String end) {
+        long count = healthCardService.getHealthCardsCount(key, value, start, end);
+        return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }
