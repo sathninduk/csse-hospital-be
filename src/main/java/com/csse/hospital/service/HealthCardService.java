@@ -19,6 +19,17 @@ public class HealthCardService {
     @Autowired
     private HealthCardRepository healthCardRepository;
 
+    private static HealthCardService instance;
+
+    private HealthCardService() {}
+
+    public static synchronized HealthCardService getInstance() {
+        if (instance == null) {
+            instance = new HealthCardService();
+        }
+        return instance;
+    }
+
     public List<HealthCard> getAllHealthCards(int page, int size) {
         int adjustedPage = (page > 0) ? page - 1 : 0;
         Pageable pageable = PageRequest.of(adjustedPage, size, Sort.by("id"));
