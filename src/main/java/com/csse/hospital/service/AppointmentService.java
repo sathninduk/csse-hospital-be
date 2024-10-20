@@ -19,6 +19,17 @@ public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    private static AppointmentService instance;
+
+    private AppointmentService() {}
+
+    public static synchronized AppointmentService getInstance() {
+        if (instance == null) {
+            instance = new AppointmentService();
+        }
+        return instance;
+    }
+
     public List<Appointment> getAllAppointments(int page, int size) {
         int adjustedPage = (page > 0) ? page - 1 : 0;
         Pageable pageable = PageRequest.of(adjustedPage, size, Sort.by("id"));
