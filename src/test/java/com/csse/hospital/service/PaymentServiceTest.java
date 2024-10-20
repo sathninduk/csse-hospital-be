@@ -40,7 +40,7 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void testGetAllPayments() {
+    public void testGetAllPayments_Positive() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
         List<Payment> payments = List.of(payment);
         Page<Payment> page = new PageImpl<>(payments);
@@ -52,7 +52,16 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void testGetPaymentById() {
+    public void testGetAllPayments_Negative() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
+        doReturn(Page.empty()).when(paymentRepository).findAll(pageable);
+
+        List<Payment> result = paymentService.getAllPayments(1, 10);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testGetPaymentById_Positive() {
         when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
 
         Optional<Payment> result = paymentService.getPaymentById(1L);
@@ -61,7 +70,15 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void testCreatePayment() {
+    public void testGetPaymentById_Negative() {
+        when(paymentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Optional<Payment> result = paymentService.getPaymentById(1L);
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void testCreatePayment_Positive() {
         when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
         Payment result = paymentService.createPayment(payment);
@@ -69,7 +86,15 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void testUpdatePayment() {
+    public void testCreatePayment_Negative() {
+        when(paymentRepository.save(any(Payment.class))).thenThrow(new RuntimeException("Error creating payment"));
+
+        Payment result = paymentService.createPayment(payment);
+        assertNull(result);
+    }
+
+    @Test
+    public void testUpdatePayment_Positive() {
         when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
@@ -84,7 +109,19 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void testUpdatePaymentsBulk() {
+    public void testUpdatePayment_Negative() {
+        when(paymentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Payment updatedPayment = new Payment();
+        updatedPayment.setAmount(200.0);
+        updatedPayment.setStatus(2);
+
+        Payment result = paymentService.updatePayment(1L, updatedPayment);
+        assertNull(result);
+    }
+
+    @Test
+    public void testUpdatePaymentsBulk_Positive() {
         Map<Long, Payment> paymentsToUpdate = new HashMap<>();
         paymentsToUpdate.put(1L, payment);
 
@@ -97,7 +134,18 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void testDeletePayment() {
+    public void testUpdatePaymentsBulk_Negative() {
+        Map<Long, Payment> paymentsToUpdate = new HashMap<>();
+        paymentsToUpdate.put(1L, payment);
+
+        when(paymentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        List<Payment> result = paymentService.updatePaymentsBulk(paymentsToUpdate);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testDeletePayment_Positive() {
         doNothing().when(paymentRepository).deleteById(1L);
 
         paymentService.deletePayment(1L);
@@ -105,11 +153,12 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void testDeletePaymentsBulk() {
+    public void testDeletePaymentsBulk_Positive() {
         List<Long> ids = List.of(1L);
         doNothing().when(paymentRepository).deleteAllById(ids);
 
         paymentService.deletePaymentsBulk(ids);
         verify(paymentRepository, times(1)).deleteAllById(ids);
     }
+
 }
