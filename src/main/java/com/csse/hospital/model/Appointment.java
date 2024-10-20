@@ -4,26 +4,30 @@ package com.csse.hospital.model;
 import com.csse.hospital.model.user.Doctor;
 import com.csse.hospital.model.user.Patient;
 import jakarta.persistence.*;
+
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
 public class Appointment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date date;
-    private Date time;
+
+    @Column(name = "appointment_time", nullable = false)
+    private Timestamp appointmentTime;
 
     @Column(nullable = false, columnDefinition = "int default 0")
     private int status;
 
     @ManyToOne
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private Doctor doctor;
 
     @ManyToOne
-    @JoinColumn(name = "doctor_id")
-    private Doctor doctor;
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
 
     // Getters and Setters
     public Long getId() {
@@ -42,28 +46,12 @@ public class Appointment {
         this.status = status;
     }
 
-    public Date getDate() {
-        return date;
+    public Timestamp getAppointmentTime() {
+        return appointmentTime;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Date getTime() { // Add this method
-        return time;
-    }
-
-    public void setTime(Date time) { // Add this method
-        this.time = time;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public void setAppointmentTime(Timestamp time) {
+        this.appointmentTime = time;
     }
 
     public Doctor getDoctor() {
@@ -72,5 +60,13 @@ public class Appointment {
 
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 }
