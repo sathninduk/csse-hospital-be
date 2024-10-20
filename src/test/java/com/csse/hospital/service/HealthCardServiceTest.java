@@ -40,7 +40,7 @@ public class HealthCardServiceTest {
     }
 
     @Test
-    public void testGetAllHealthCards() {
+    public void testGetAllHealthCards_Positive() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
         List<HealthCard> healthCards = List.of(healthCard);
         Page<HealthCard> page = new PageImpl<>(healthCards);
@@ -52,7 +52,16 @@ public class HealthCardServiceTest {
     }
 
     @Test
-    public void testGetHealthCardById() {
+    public void testGetAllHealthCards_Negative() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
+        doReturn(Page.empty()).when(healthCardRepository).findAll(pageable);
+
+        List<HealthCard> result = healthCardService.getAllHealthCards(1, 10);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testGetHealthCardById_Positive() {
         when(healthCardRepository.findById(1L)).thenReturn(Optional.of(healthCard));
 
         Optional<HealthCard> result = healthCardService.getHealthCardById(1L);
@@ -61,7 +70,15 @@ public class HealthCardServiceTest {
     }
 
     @Test
-    public void testCreateHealthCard() {
+    public void testGetHealthCardById_Negative() {
+        when(healthCardRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Optional<HealthCard> result = healthCardService.getHealthCardById(1L);
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void testCreateHealthCard_Positive() {
         when(healthCardRepository.save(any(HealthCard.class))).thenReturn(healthCard);
 
         HealthCard result = healthCardService.createHealthCard(healthCard);
@@ -69,7 +86,15 @@ public class HealthCardServiceTest {
     }
 
     @Test
-    public void testUpdateHealthCard() {
+    public void testCreateHealthCard_Negative() {
+        when(healthCardRepository.save(any(HealthCard.class))).thenThrow(new RuntimeException("Error creating health card"));
+
+        HealthCard result = healthCardService.createHealthCard(healthCard);
+        assertNull(result);
+    }
+
+    @Test
+    public void testUpdateHealthCard_Positive() {
         when(healthCardRepository.findById(1L)).thenReturn(Optional.of(healthCard));
         when(healthCardRepository.save(any(HealthCard.class))).thenReturn(healthCard);
 
@@ -84,7 +109,19 @@ public class HealthCardServiceTest {
     }
 
     @Test
-    public void testUpdateHealthCardsBulk() {
+    public void testUpdateHealthCard_Negative() {
+        when(healthCardRepository.findById(1L)).thenReturn(Optional.empty());
+
+        HealthCard updatedHealthCard = new HealthCard();
+        updatedHealthCard.setCardNumber("0987654321");
+        updatedHealthCard.setStatus(2);
+
+        HealthCard result = healthCardService.updateHealthCard(1L, updatedHealthCard);
+        assertNull(result);
+    }
+
+    @Test
+    public void testUpdateHealthCardsBulk_Positive() {
         Map<Long, HealthCard> healthCardsToUpdate = new HashMap<>();
         healthCardsToUpdate.put(1L, healthCard);
 
@@ -97,7 +134,18 @@ public class HealthCardServiceTest {
     }
 
     @Test
-    public void testDeleteHealthCard() {
+    public void testUpdateHealthCardsBulk_Negative() {
+        Map<Long, HealthCard> healthCardsToUpdate = new HashMap<>();
+        healthCardsToUpdate.put(1L, healthCard);
+
+        when(healthCardRepository.findById(1L)).thenReturn(Optional.empty());
+
+        List<HealthCard> result = healthCardService.updateHealthCardsBulk(healthCardsToUpdate);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testDeleteHealthCard_Positive() {
         doNothing().when(healthCardRepository).deleteById(1L);
 
         healthCardService.deleteHealthCard(1L);
@@ -105,11 +153,12 @@ public class HealthCardServiceTest {
     }
 
     @Test
-    public void testDeleteHealthCardsBulk() {
+    public void testDeleteHealthCardsBulk_Positive() {
         List<Long> ids = List.of(1L);
         doNothing().when(healthCardRepository).deleteAllById(ids);
 
         healthCardService.deleteHealthCardsBulk(ids);
         verify(healthCardRepository, times(1)).deleteAllById(ids);
     }
+
 }

@@ -1,4 +1,3 @@
-// AppointmentServiceTest.java
 package com.csse.hospital.service;
 
 import com.csse.hospital.model.Appointment;
@@ -40,7 +39,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void testGetAllAppointments() {
+    public void testGetAllAppointments_Positive() {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
         List<Appointment> appointments = List.of(appointment);
         Page<Appointment> page = new PageImpl<>(appointments);
@@ -52,7 +51,16 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void testGetAppointmentById() {
+    public void testGetAllAppointments_Negative() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id"));
+        doReturn(Page.empty()).when(appointmentRepository).findAll(pageable);
+
+        List<Appointment> result = appointmentService.getAllAppointments(1, 10);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testGetAppointmentById_Positive() {
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
 
         Optional<Appointment> result = appointmentService.getAppointmentById(1L);
@@ -61,7 +69,15 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void testCreateAppointment() {
+    public void testGetAppointmentById_Negative() {
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Optional<Appointment> result = appointmentService.getAppointmentById(1L);
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void testCreateAppointment_Positive() {
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
 
         Appointment result = appointmentService.createAppointment(appointment);
@@ -69,7 +85,15 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void testUpdateAppointment() {
+    public void testCreateAppointment_Negative() {
+        when(appointmentRepository.save(any(Appointment.class))).thenThrow(new RuntimeException("Error creating appointment"));
+
+        Appointment result = appointmentService.createAppointment(appointment);
+        assertNull(result);
+    }
+
+    @Test
+    public void testUpdateAppointment_Positive() {
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
 
@@ -82,7 +106,18 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void testUpdateAppointmentsBulk() {
+    public void testUpdateAppointment_Negative() {
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        Appointment updatedAppointment = new Appointment();
+        updatedAppointment.setStatus(2);
+
+        Appointment result = appointmentService.updateAppointment(1L, updatedAppointment);
+        assertNull(result);
+    }
+
+    @Test
+    public void testUpdateAppointmentsBulk_Positive() {
         Map<Long, Appointment> appointmentsToUpdate = new HashMap<>();
         appointmentsToUpdate.put(1L, appointment);
 
@@ -95,7 +130,18 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void testDeleteAppointment() {
+    public void testUpdateAppointmentsBulk_Negative() {
+        Map<Long, Appointment> appointmentsToUpdate = new HashMap<>();
+        appointmentsToUpdate.put(1L, appointment);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        List<Appointment> result = appointmentService.updateAppointmentsBulk(appointmentsToUpdate);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testDeleteAppointment_Positive() {
         doNothing().when(appointmentRepository).deleteById(1L);
 
         appointmentService.deleteAppointment(1L);
@@ -103,11 +149,12 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void testDeleteAppointmentsBulk() {
+    public void testDeleteAppointmentsBulk_Positive() {
         List<Long> ids = List.of(1L);
         doNothing().when(appointmentRepository).deleteAllById(ids);
 
         appointmentService.deleteAppointmentsBulk(ids);
         verify(appointmentRepository, times(1)).deleteAllById(ids);
     }
+
 }
