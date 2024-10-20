@@ -29,6 +29,12 @@ public class PaymentService {
         return instance;
     }
 
+    private PaymentUpdateStrategy paymentUpdateStrategy = new DefaultPaymentUpdateStrategy();
+
+    public void setPaymentUpdateStrategy(PaymentUpdateStrategy paymentUpdateStrategy) {
+        this.paymentUpdateStrategy = paymentUpdateStrategy;
+    }
+
     public List<Payment> getAllPayments(int page, int size) {
         int adjustedPage = (page > 0) ? page - 1 : 0;
         Pageable pageable = PageRequest.of(adjustedPage, size, Sort.by("id"));
@@ -47,20 +53,7 @@ public class PaymentService {
         Optional<Payment> existingPaymentOpt = paymentRepository.findById(id);
         if (existingPaymentOpt.isPresent()) {
             Payment existingPayment = existingPaymentOpt.get();
-
-            if (payment.getAmount() != 0) {
-                existingPayment.setAmount(payment.getAmount());
-            }
-            if (payment.getPatient() != null) {
-                existingPayment.setPatient(payment.getPatient());
-            }
-            if (payment.getPaymentMethod() != null) {
-                existingPayment.setPaymentMethod(payment.getPaymentMethod());
-            }
-            if (payment.getStatus() != 0) {
-                existingPayment.setStatus(payment.getStatus());
-            }
-
+            existingPayment = paymentUpdateStrategy.updatePayment(existingPayment, payment);
             return paymentRepository.save(existingPayment);
         } else {
             return null;
@@ -75,20 +68,7 @@ public class PaymentService {
             Optional<Payment> existingPaymentOpt = paymentRepository.findById(id);
             if (existingPaymentOpt.isPresent()) {
                 Payment existingPayment = existingPaymentOpt.get();
-
-                if (payment.getAmount() != 0) {
-                    existingPayment.setAmount(payment.getAmount());
-                }
-                if (payment.getPatient() != null) {
-                    existingPayment.setPatient(payment.getPatient());
-                }
-                if (payment.getPaymentMethod() != null) {
-                    existingPayment.setPaymentMethod(payment.getPaymentMethod());
-                }
-                if (payment.getStatus() != 0) {
-                    existingPayment.setStatus(payment.getStatus());
-                }
-
+                existingPayment = paymentUpdateStrategy.updatePayment(existingPayment, payment);
                 updatedPayments.add(paymentRepository.save(existingPayment));
             }
         }
