@@ -18,6 +18,17 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
+    private static PaymentService instance;
+
+    private PaymentService() {}
+
+    public static synchronized PaymentService getInstance() {
+        if (instance == null) {
+            instance = new PaymentService();
+        }
+        return instance;
+    }
+
     public List<Payment> getAllPayments(int page, int size) {
         int adjustedPage = (page > 0) ? page - 1 : 0;
         Pageable pageable = PageRequest.of(adjustedPage, size, Sort.by("id"));
