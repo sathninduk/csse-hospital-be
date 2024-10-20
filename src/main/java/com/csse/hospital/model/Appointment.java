@@ -6,11 +6,12 @@ import com.csse.hospital.model.user.Patient;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
+// Appointment Entity
 @Entity
 public class Appointment {
 
+    // Attributes
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,6 +22,7 @@ public class Appointment {
     @Column(nullable = false, columnDefinition = "int default 0")
     private int status;
 
+    // Relationships
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false)
     private Doctor doctor;
